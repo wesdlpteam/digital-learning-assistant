@@ -197,6 +197,8 @@ body{font-family:'Space Grotesk',system-ui,sans-serif;background:var(--bg);color
 .howto-steps{list-style:none;padding:0;margin:8px 0 0;counter-reset:step}
 .howto-steps li{position:relative;padding:6px 0 6px 32px;font-size:13px;color:#CCC;line-height:1.5;counter-increment:step}
 .howto-steps li::before{content:counter(step);position:absolute;left:0;top:6px;width:22px;height:22px;background:#CDEB4520;color:#CDEB45;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+
+.sg-extras{margin-top:16px;padding-top:14px;border-top:1px solid #333}
 </style></head><body><div id="app"></div>
 <script>
 
@@ -638,6 +640,7 @@ h+='<div class="sg-section"><div class="sg-collapse" id="sb_'+sidH+'" onclick="t
 howSteps.forEach(function(step){h+='<li>'+step+'</li>';});
 h+='</ol>';if(howTip)h+='<div style="margin-top:10px;font-size:12px;color:#CDEB45;font-style:italic">'+howTip+'</div>';
 h+='</div></div>';
+h+='<div class="sg-extras">';
 var vcs=gV(yl,j,s.t,s.d);if(!window._cid)window._cid=0;
 if(!window._sid)window._sid=0;var sid1='s'+window._sid++;
 h+='<div class="sg-section"><div class="sg-collapse" id="sb_'+sid1+'" onclick="tgSec(\''+sid1+'\')"><div class="sg-label" style="color:'+tc+'">'+I.k+' Australian Curriculum V9.0</div><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 8 10 12 14 8"/></svg></div><div class="sg-collapsible" id="sc_'+sid1+'"><div class="cur-pills">';
@@ -660,7 +663,7 @@ if(!Object.keys(atlgrp).length)h+='<div class="atl-pill">Integrated across ATL c
 h+='</div>';
 window._aid-=Object.keys(atlgrp).length;
 Object.keys(atlgrp).forEach(function(cat){var aid='atl'+window._aid++;h+='<div class="atl-detail" id="ad_'+aid+'"><b>'+cat+' Skills</b><ul style="margin:6px 0 0 16px;padding:0;list-style:disc">';atlgrp[cat].forEach(function(a){h+='<li>'+a.skill+' — '+a.desc+'</li>';});h+='</ul></div>';});
-h+='</div></div>';
+h+='</div></div></div>';
 if(!window._fbData)window._fbData=[];var _fbi=window._fbData.length;window._fbData.push({campus:CN[ca],year:yl,theme:u.th,tool:s.t,phase:phaseLabel+' #'+(si+1)});
 h+='<div class="sg-fb"><button onclick="openFB('+_fbi+')" class="sg-fb-btn sg-fb-idea">💬 Feedback</button><div class="sg-react"><button class="sg-react-btn" onclick="reactFB('+_fbi+',\'up\',this)">👍</button><button class="sg-react-btn" onclick="reactFB('+_fbi+',\'down\',this)">👎</button></div></div>';
 h+='</div></div>';});
