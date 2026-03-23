@@ -193,6 +193,10 @@ body{font-family:'Space Grotesk',system-ui,sans-serif;background:var(--bg);color
 .sg-howto-steps li{margin-bottom:6px}
 .sg-howto-steps li:last-child{margin-bottom:0}
 .sg-howto-tip{margin-top:10px;font-size:12px;color:#F5A623;font-style:italic}
+
+.howto-steps{list-style:none;padding:0;margin:8px 0 0;counter-reset:step}
+.howto-steps li{position:relative;padding:6px 0 6px 32px;font-size:13px;color:#CCC;line-height:1.5;counter-increment:step}
+.howto-steps li::before{content:counter(step);position:absolute;left:0;top:6px;width:22px;height:22px;background:#CDEB4520;color:#CDEB45;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
 </style></head><body><div id="app"></div>
 <script>
 
@@ -559,6 +563,40 @@ else if(t==="Microsoft Excel"){steps=["Open Microsoft Excel and create a new wor
 else{steps=["Open the app or website and log in with your school account.","Set up the activity — create a template or assignment for students.","Share the link, code or QR with students.","Students complete the activity on their device.","Review and discuss the results as a class.","Save or export the work for documentation."];tip="Tip: Contact the DLP team if you need help setting up this tool.";}
 return{steps:steps,tip:tip};}
 
+
+function gHow(tool,desc){
+var T={
+"Seesaw":["Open Seesaw and select the class activity.","Students choose their response format: photo, video, drawing or voice recording.","Students complete the task and add annotations, labels or voice narration.","Students submit to the class journal for teacher review."],
+"Book Creator":["Open Book Creator and start a new book (or open an existing one).","Students add pages using text, images, drawings, audio recording and video.","Students use the toolbar to format, resize and arrange their content.","Publish the book to the class library for sharing and feedback."],
+"Canva":["Open Canva and search for a relevant template (poster, infographic, presentation, etc.).","Students customise with their own text, images, icons and colours.","Use the collaboration feature so partners can edit together in real time.","Export as PDF or share the Canva link for presenting."],
+"Padlet":["Teacher creates a Padlet board (Wall, Map, Timeline, etc.) and shares the link.","Students click + to add a post with text, images, links or recordings.","Students read and comment on classmates' posts.","Teacher projects the board to discuss patterns and key findings."],
+"Google Earth":["Open earth.google.com in Chrome and click Projects > New Project.","Students search for locations and add them as pins to the project.","At each pin, add a title, description, images and voice narration.","Click Present to fly through the tour with narration at each stop."],
+"Scratch":["Open scratch.mit.edu and click Create to start a new project.","Students add sprites (characters) and design backdrops for each scene.","Use block-based code to program movement, events, variables and interactions.","Click the green flag to test, debug and refine the project."],
+"Scratch Jr":["Open the Scratch Jr app on the iPad.","Students choose characters and design backgrounds using the paint editor.","Snap coding blocks together to make characters move, speak and interact.","Press the green flag to watch the story or game play out."],
+"iMovie":["Open iMovie and create a new Movie project.","Import photos, video clips and audio from the camera roll or record directly.","Arrange clips on the timeline, add titles, transitions and voiceover narration.","Export the finished video to the camera roll or share to Seesaw."],
+"Micro:bit":["Open makecode.microbit.org and start a new project.","Students drag coding blocks to program inputs (buttons, sensors) and outputs (LEDs, sounds).","Connect the micro:bit via USB and click Download to flash the program.","Test, debug and iterate on the physical device."],
+"Sphero":["Open the Sphero Edu app and connect to the Sphero via Bluetooth.","Students build a block-based or draw-path program to control movement.","Place the Sphero on the floor map or activity surface and press Play.","Observe, adjust angles and distances, and refine the code."],
+"Beebots":["Place the Beebot on the floor mat or activity map.","Students plan their route by counting steps and turns on the mat.","Press the arrow buttons in sequence (forward, back, left turn, right turn) then press Go.","Observe the route and reprogram if the Beebot does not reach the target."],
+"Mentimeter":["Teacher creates a Mentimeter presentation with question slides (word cloud, poll, scale, quiz).","Share the join code with students — they go to menti.com and enter the code.","Students respond on their devices and see live results appear on screen.","Teacher facilitates discussion based on the class responses."],
+"Kahoot":["Teacher creates a Kahoot quiz at kahoot.com with questions related to the topic.","Display the game PIN on screen — students join at kahoot.it on their devices.","Students answer each question within the time limit, earning points for speed and accuracy.","Review the results together, discussing any surprising answers or common mistakes."],
+"Microsoft Forms":["Teacher creates a Form at forms.office.com with the survey or quiz questions.","Share the link with students via Teams or Seesaw.","Students complete the form on their devices.","Teacher opens Responses tab to view results, charts and individual answers."],
+"GarageBand":["Open GarageBand on the iPad and choose a project type (Live Loops, Tracks, etc.).","Students experiment with instruments, loops and sound effects to build their composition.","Record live audio (voice, instruments) using the built-in microphone.","Export the finished audio to the camera roll or share directly."],
+"Adobe Express":["Open Adobe Express and choose a template (poster, video, web page, etc.).","Students add their own text, images, icons, video clips and audio.","Use the brand tools to keep fonts and colours consistent.","Share via link or download as an image, PDF or video."],
+"Tinkercad":["Open tinkercad.com and start a new 3D design.","Students drag shapes onto the workplane and use the tools to resize, rotate and group.","Combine shapes using align and group to build their model.","Export as STL for 3D printing or take a screenshot to share."],
+"Cubetto":["Place Cubetto on the activity mat.","Students select direction tiles (forward, left, right) and place them in the coding board slots in order.","Press the blue button to run the program and watch Cubetto follow the path.","Adjust the tile sequence and try again to reach the target."],
+"Indi Robot":["Place Indi on the colour tile path.","Students arrange the colour tiles to create a route — each colour tells Indi a different action.","Press the button and watch Indi follow the path.","Rearrange tiles to change the route and test new solutions."],
+"CoDrone EDU":["Open the CoDrone EDU app and connect via Bluetooth.","Students build a block-based flight program — setting take-off, direction, height and landing.","Place the drone in a safe open area and click Run.","Observe the flight, adjust the code, and iterate."],
+"Lego Spike":["Open the LEGO Education Spike app and select a project.","Students build the model following the step-by-step instructions.","Connect the hub and write a block-based program to control motors and sensors.","Run the program and refine the code based on what happens."],
+"Microsoft Excel":["Open Excel and set up a spreadsheet with column headers for the data.","Students enter or import their data into the rows.","Use formulas (SUM, AVERAGE, COUNTIF) to analyse the data.","Insert a chart to visualise patterns and present findings."],
+"Google Earth":["Open earth.google.com in Chrome and click Projects > New Project.","Students search for locations and add them as pins to the project.","At each pin, add a title, description, images and voice narration.","Click Present to fly through the tour with narration at each stop."],
+"Pico VR":["Power on the Pico headset and select the VR experience from the library.","Students put on the headset and use the controllers to navigate.","Explore the virtual environment, interacting with objects and locations.","Remove the headset and reflect on the experience with the class."],
+"Insta360":["Mount the Insta360 camera on a tripod or hold it steady.","Press the shutter button to capture a 360-degree photo or start a video recording.","Transfer the footage to a device using the Insta360 app.","Edit and share the 360 content — students can view it by dragging to look around."],
+"DJI Drone":["Teacher operates the drone (students do not fly). Plan the flight path with the class.","Launch the drone and capture aerial photos or video of the target area.","Land safely and transfer footage to a device.","Students analyse the aerial imagery in their project work."],
+"Green Screen":["Set up the green screen backdrop and position the camera or iPad.","Students stand in front of the screen and record their performance or presentation.","Open a green screen app (Do Ink, iMovie) and replace the background with their chosen image or video.","Export the final composite video for sharing."]
+};
+var base=tool.replace(/ *\(.*\)/,"").trim();
+return T[base]||T[tool.split(",")[0].trim()]||["Open "+tool+" and start a new project.","Students follow the task instructions using the tools available.","Review and refine the work.","Share or submit the finished product."];
+}
 function gATL(t,d){var s=(t+" "+d).toLowerCase(),r=[];
 if(/analy|evaluat|compar|critiqu|assess|deconstruct|debate|perspective|bias|persua/.test(s))r.push({cat:"Thinking",skill:"Critical-thinking skills",desc:"Analysing and evaluating issues and ideas"});
 if(/creat|design|innovat|compos|imaginat|prototype|invent|code|build|construct/.test(s))r.push({cat:"Thinking",skill:"Creative-thinking skills",desc:"Generating novel ideas and considering new perspectives"});
@@ -627,6 +665,11 @@ h+='<div class="sg"><div class="sg-head"><div class="sg-icon" style="background:
 h+='<div class="sg-desc">'+s.d+'</div>';
 h+='';
 h+='<div class="sg-section"><div class="sg-label">'+I.s+' Value Add</div><div class="vb" style="border-left-color:'+tc+'">'+va+'</div></div>';
+var howSteps=gHow(s.t,s.d);
+var sidH='s'+(!window._sid?window._sid=0:window._sid);window._sid++;
+h+='<div class="sg-section"><div class="sg-collapse" id="sb_'+sidH+'" onclick="tgSec(\''+sidH+'\')"><div class="sg-label" style="color:#38BDF8">🛠️ How Do I Do This?</div><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 8 10 12 14 8"/></svg></div><div class="sg-collapsible" id="sc_'+sidH+'"><ol class="howto-steps">';
+howSteps.forEach(function(step){h+='<li>'+step+'</li>';});
+h+='</ol></div></div>';
 var vcs=gV(yl,j,s.t,s.d);if(!window._cid)window._cid=0;
 if(!window._sid)window._sid=0;var sid1='s'+window._sid++;
 h+='<div class="sg-section"><div class="sg-collapse" id="sb_'+sid1+'" onclick="tgSec(\''+sid1+'\')"><div class="sg-label" style="color:'+tc+'">'+I.k+' Australian Curriculum V9.0</div><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 8 10 12 14 8"/></svg></div><div class="sg-collapsible" id="sc_'+sid1+'"><div class="cur-pills">';
