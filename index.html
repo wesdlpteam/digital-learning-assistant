@@ -728,7 +728,16 @@ fetch(FBHOOK,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'}
 btn.classList.add('done');
 btn.innerHTML='✅ Done!';
 btn.onclick=null;
+if(!window._usedPhases)window._usedPhases={};
+var unitKey=d.campus+'|'+d.year+'|'+d.theme;
+if(!window._usedPhases[unitKey])window._usedPhases[unitKey]={};
+window._usedPhases[unitKey][d.phase]=true;
+var p=window._usedPhases[unitKey];
+if(p['Beginning']&&p['Middle']&&p['End']){
+celebrateStreak(d.campus+' '+d.year);
+}else{
 celebrate(d.campus+' '+d.year);
+}
 }
 function celebrate(teamName){
 var colors=['#CDEB45','#F5A623','#7ED957','#38BDF8','#A78BFA','#FF6B6B','#FBBF24','#22C55E'];
@@ -752,6 +761,29 @@ popup.className='point-popup';
 popup.innerHTML='<div class="point-popup-inner"><div class="point-popup-emoji">🎉</div><div class="point-popup-text">+1 Point!</div><div class="point-popup-sub">'+teamName+'</div><button class="point-popup-btn" onclick="this.closest(\'.point-popup\').remove()">Keep Exploring</button></div>';
 document.body.appendChild(popup);
 setTimeout(function(){container.remove();},3000);
+}
+function celebrateStreak(teamName){
+var colors=['#CDEB45','#F5A623','#7ED957','#38BDF8','#A78BFA','#FF6B6B','#FBBF24','#22C55E'];
+var container=document.createElement('div');
+container.className='confetti-container';
+for(var i=0;i<120;i++){
+var c=document.createElement('div');
+c.className='confetti';
+c.style.left=Math.random()*100+'%';
+c.style.background=colors[Math.floor(Math.random()*colors.length)];
+c.style.animationDelay=Math.random()*1.2+'s';
+c.style.animationDuration=(1.5+Math.random()*2)+'s';
+c.style.width=(6+Math.random()*10)+'px';
+c.style.height=(6+Math.random()*10)+'px';
+c.style.borderRadius=Math.random()>0.5?'50%':'2px';
+container.appendChild(c);
+}
+document.body.appendChild(container);
+var popup=document.createElement('div');
+popup.className='point-popup';
+popup.innerHTML='<div class="point-popup-inner"><div class="point-popup-emoji">🔥</div><div class="point-popup-text" style="font-size:28px">STREAK BONUS!</div><div class="point-popup-text">+3 Points!</div><div class="point-popup-sub" style="margin-top:8px">'+teamName+' Team completed all 3 phases of a unit!</div><button class="point-popup-btn" onclick="this.closest(\'.point-popup\').remove()">Keep Exploring</button></div>';
+document.body.appendChild(popup);
+setTimeout(function(){container.remove();},4000);
 }
 function loadLeaderboard(){
 fetch(FBHOOK+'?action=leaderboard').then(function(r){return r.json();}).then(function(data){
