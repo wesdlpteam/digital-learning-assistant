@@ -927,15 +927,7 @@ try{(function(){
     try{history.replaceState(null,'',redirect);}catch(e){}
   }
 })();}catch(e){}
-loadLeaderboard();
-readHash();
-R();
-
-
-
-// ── Clean URL routing (path-based, no hash, no %20) ──────────
-// Year slugs: "Year 1" <-> "Year1", "Prep" stays "Prep"
-// Theme acronym map for clean URLs
+// Theme acronym map — must be defined before readHash() runs
 var TH_SLUG={
 'Who We Are':'WWA',
 'Where We Are in Place and Time':'WWAIPAT',
@@ -946,14 +938,13 @@ var TH_SLUG={
 'How We Organise Ourselves':'HWOO',
 'Sharing the Planet':'STP'
 };
-// Reverse map: acronym -> theme name
 var TH_UNSLUG={};
 Object.keys(TH_SLUG).forEach(function(k){TH_UNSLUG[TH_SLUG[k]]=k;});
-
 function slugYL(y){return y.replace(/\s+/g,'');}
 function unslugYL(y){return y.replace(/(Year|Term)(\d)/,'$1 $2');}
 
 // Detect the base path once (e.g. "/digital-learning-assistant")
+// Must be defined before readHash() runs
 var _basePath=(function(){
   try{
     var p=window.location.pathname;
@@ -962,6 +953,11 @@ var _basePath=(function(){
     return p.replace(/\/(index\.html)?$/, '').replace(/\/$/,'') || '';
   }catch(e){return '';}
 })();
+
+loadLeaderboard();
+readHash();
+R();
+
 
 function pushHash(){
   try{
