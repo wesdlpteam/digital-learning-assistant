@@ -935,6 +935,21 @@ R();
 
 // ── Clean URL routing (path-based, no hash, no %20) ──────────
 // Year slugs: "Year 1" <-> "Year1", "Prep" stays "Prep"
+// Theme acronym map for clean URLs
+var TH_SLUG={
+'Who We Are':'WWA',
+'Where We Are in Place and Time':'WWAIPAT',
+'How We Express Ourselves':'HWEO',
+'How the World Works':'HTWW',
+'How the World Works (Materials)':'HTWWM',
+'How the World Works (Solar System)':'HTWWSS',
+'How We Organise Ourselves':'HWOO',
+'Sharing the Planet':'STP'
+};
+// Reverse map: acronym -> theme name
+var TH_UNSLUG={};
+Object.keys(TH_SLUG).forEach(function(k){TH_UNSLUG[TH_SLUG[k]]=k;});
+
 function slugYL(y){return y.replace(/\s+/g,'');}
 function unslugYL(y){return y.replace(/(Year|Term)(\d)/,'$1 $2');}
 
@@ -953,7 +968,12 @@ function pushHash(){
     var path=_basePath+'/';
     if(S.v==='campus'&&S.ca)path+=S.ca;
     else if(S.v==='units'&&S.ca&&S.yl)path+=S.ca+'/'+slugYL(S.yl);
-    else if(S.v==='detail'&&S.ca&&S.yl&&S.ui!=null)path+=S.ca+'/'+slugYL(S.yl)+'/'+S.ui;
+    else if(S.v==='detail'&&S.ca&&S.yl&&S.ui!=null){
+      var us=gu(S.ca,S.yl);
+      var u=us[S.ui];
+      var thSlug=u?TH_SLUG[u.th]||S.ui:S.ui;
+      path+=S.ca+'/'+slugYL(S.yl)+'/'+thSlug;
+    }
     else path=_basePath||'/';
     history.replaceState(null,'',path);
   }catch(e){}
@@ -989,9 +1009,17 @@ function readHash(){try{
     var yl=unslugYL(ylSlug);
     S.yl=yl; S.v='units';
     if(uiStr!==''&&uiStr!=null){
-      var idx=parseInt(uiStr,10);
       var us=gu(ca,yl);
-      if(!isNaN(idx)&&us[idx]){S.ui=idx;S.v='detail';}
+      var idx=-1;
+      // Try acronym lookup first, then fall back to numeric index
+      var thName=TH_UNSLUG[uiStr]||'';
+      if(thName){
+        for(var i=0;i<us.length;i++){if(us[i].th===thName){idx=i;break;}}
+      } else {
+        idx=parseInt(uiStr,10);
+        if(isNaN(idx)||!us[idx])idx=-1;
+      }
+      if(idx>=0&&us[idx]){S.ui=idx;S.v='detail';}
     }
   }
   }catch(e){}}
