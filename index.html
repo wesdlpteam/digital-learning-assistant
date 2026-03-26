@@ -705,7 +705,7 @@ if(/broadcast|news.*report|podcast|publish|post.*online|digital.*exhibition|sha
 r.push({cat:'Creative Communicator',sub:'Computer Mediated Communication',desc:'Creating and sharing digital communications for specific audiences through appropriate digital platforms'});
 
 // CREATIVE COMMUNICATOR — Original Works
-if(/produce|compose|film|animat|illustrat|create.*original|original.*creation|new.*creation|student.*creat|student.*produc|student.*made|digital.*product|digital.*artefact|their.*own.*work|own.*composition|own.*soundtrack|original.*work/.test(s))
+if(/produce[sd]?|compos[eing]+|film(?:s|ed|ing)?\s+(?:themselves|their|a\s|an\s|the\s|us)|animat|illustrat|create.*original|original.*creat|new.*creation|students?\s+(?:create|makes?|records?|writes?|draws?|develops?|authors?)\s+(?:a|an|their|the\s|one)|digital.*artefact|their\s+own\s+work|own\s+composition|own\s+soundtrack|original.*work/.test(s))
 r.push({cat:'Creative Communicator',sub:'Original Works',desc:'Creating original digital works or responsibly repurposing digital resources into new creations'});
 
 // CREATIVE COMMUNICATOR — Learning Tools (all named tools)
