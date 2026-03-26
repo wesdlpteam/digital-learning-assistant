@@ -4,17 +4,17 @@
   <meta charset="utf-8">
   <title>Wesley DLA</title>
   <script>
-    // GitHub Pages SPA routing trick.
-    // When someone visits /digital-learning-assistant/GW/Year1 directly,
-    // GitHub Pages serves this 404.html instead of returning a real 404.
-    // We save the path to sessionStorage and redirect to the root index,
-    // which then reads it back and restores the correct page.
-    var path = window.location.pathname;
-    var search = window.location.search;
-    sessionStorage.setItem('dla_redirect', path + search);
-    // Redirect to the root of the repo (keeps the /digital-learning-assistant/ base)
-    var base = path.match(/^(\/[^\/]+)\//);
-    window.location.replace((base ? base[1] : '') + '/');
+    // GitHub Pages SPA routing — encodes the path as a query string
+    // so index.html can read it without relying on sessionStorage.
+    // e.g. /digital-learning-assistant/GW/Year5/HWEO
+    //   -> /digital-learning-assistant/?p=/GW/Year5/HWEO
+    var l = window.location;
+    var base = l.pathname.match(/^(\/[^\/]*)\//);
+    var basePath = base ? base[1] : '';
+    var routePath = l.pathname.slice(basePath.length);
+    l.replace(
+      basePath + '/?p=' + encodeURIComponent(routePath + l.search) + (l.hash ? '&h=' + encodeURIComponent(l.hash) : '')
+    );
   </script>
 </head>
 <body></body>
