@@ -657,33 +657,80 @@ if(/plan.*sequence|organis.*time|manage.*time|timeline|checklist|step.by.step|sc
 if(/reflect.*on.*their.*learn|reflect.*on.*learn|self.assess|metacognit|review.*their.*learn|consider.*their.*process|what.*they.*learn|how.*they.*improv|learning.*journal/.test(s))r.push({cat:'Self-Management',skill:'Reflection skills',desc:'(Re)considering the process of learning to develop self-awareness and understanding'});
 
 return r;}
-function gWDS(t,d){
+function gWDS(t,d,yl){
 var tool=t.toLowerCase(),desc=d.toLowerCase(),s=tool+' '+desc,r=[];
+var isF2=(yl==='Prep'||yl==='Year 1'||yl==='Year 2');
+var is34=(yl==='Year 3'||yl==='Year 4');
+var is56=(yl==='Year 5'||yl==='Year 6');
+var isRobot=/scratch|lego spike|micro.?bit|codrone|beebot|cubetto|indi robot|sphero/.test(tool);
 
-// PRINCIPLED PRACTICE
-if(/cyber.safe|safe.*online|online.*safe|privacy|personal.*information|protect.*data|essential.*agreement.*digital|digital.*agreement|safe.*use|responsible.*digital|digital.*citizen|social.*protocol.*ict|data.*security|identity.*protection|screen.*time|age.*appropriat/.test(s))r.push({cat:'Principled Practice',sub:'Safe and Secure',desc:'Engaging safely, legally and ethically when using technology and networked devices'});
-if(/copyright|plagiar|referenc|attribut|intellectual.*property|source.*their|cite.*source|acknowledge.*source|ownership.*digital|original.*work.*source|creative.*commons/.test(s))r.push({cat:'Principled Practice',sub:'Academic Integrity',desc:'Respecting intellectual property and applying ethical conventions when using digital resources'});
-if(/impact.*technolog|technolog.*impact|role.*ict|ict.*society|technology.*society|society.*technology|digital.*future|technolog.*community|positive.*negative.*impact|ict.*home|ict.*school|digital.*change|technolog.*world/.test(s))r.push({cat:'Principled Practice',sub:'Technology and Society',desc:'Understanding the role and impact of ICT in society, home, school and community'});
+// PRINCIPLED PRACTICE — Safe and Secure
+if(/cyber.safe|safe.*online|online.*safe|privacy|personal.*information|protect.*data|essential.*agreement.*digital|responsible.*digital|digital.*citizen|data.*security|identity.*protection|screen.*time|age.*appropriat|being safe online|stay safe.*online|safe.*use.*technolog|ethical behaviour.*technolog|legal.*ethical.*technolog/.test(s))
+r.push({cat:'Principled Practice',sub:'Safe and Secure',desc:'Engaging safely, legally and ethically when using technology and networked devices'});
 
-// ENGINEERING KNOWLEDGE
-if(/plan.*solution|design.*process|brainstorm|generate.*idea|ideate|think.*through|plan.*approach|record.*idea|represent.*thinking|proposal|map.*out|outline.*plan/.test(s))r.push({cat:'Engineering Knowledge',sub:'Ideate and Plan',desc:'Generating ideas, representing thinking and planning digital solutions'});
-if(/build|prototype|creat.*digital|develop.*solution|code|program|construct|fabricat|make.*app|design.*and.*build|design.*and.*create|design.*and.*develop|model.*digital|3d.*model|tinkercad|lego spike|micro.?bit|scratch|codrone|sphero|beebot|cubetto|indi robot/.test(s))r.push({cat:'Engineering Knowledge',sub:'Prototype',desc:'Creating, modifying and developing digital solutions or creative outputs for specific purposes'});
-if(/self.assess|reflect.*learn|goal.*setting|set.*goal|personal.*goal|review.*progress|feedback.*improv|growth.*mindset|learning.*journal|metacognit|monitor.*own/.test(s))r.push({cat:'Engineering Knowledge',sub:'Self-Regulated Learning',desc:'Setting goals, seeking feedback and reflecting on the learning process to improve outcomes'});
-if(/research|investigat|gather.*data|collect.*data|find.*source|locate.*information|evaluat.*source|curate|survey.*data|analys.*data|interpret.*data|formulate.*question|fact.check|verify.*source|library|bibliography/.test(s))r.push({cat:'Engineering Knowledge',sub:'Critically Curate',desc:'Building knowledge by locating, evaluating and synthesising information from digital resources'});
-if(/design.*thinking|empathis|empathize|define.*problem|iterate|test.*and.*refine|user.*need|d:school|human.centred|design.*cycle|prototype.*test|test.*prototype|design.*constrain|design.*criteria/.test(s))r.push({cat:'Engineering Knowledge',sub:'Design Thinking',desc:'Using a cyclical design process to generate, test and refine solutions to authentic problems'});
+// PRINCIPLED PRACTICE — Academic Integrity
+if(/copyright|plagiar|referenc.*convention|attribut.*source|intellectual.*property|cite.*source|acknowledge.*source|ownership.*digital|creative.*commons|reference.*list|source.*of.*information|find.*most.*accurate/.test(s))
+r.push({cat:'Principled Practice',sub:'Academic Integrity',desc:'Respecting intellectual property and applying ethical conventions when using digital resources'});
 
-// CREATIVE COMMUNICATOR
-if(/collaborat|co.creat|group.*work|work.*together|peer.*feedback|peer.*review|work.*with.*partner|class.*padlet|shared.*padlet|shared.*board|class.*wall|jointly|collective/.test(s))r.push({cat:'Creative Communicator',sub:'Collaboration',desc:'Using digital tools to safely share and exchange information with appropriate audiences'});
-if(/broadcast|news.*report|podcast|publish|post.*online|digital.*exhibition|share.*their.*work|present.*to.*audience|multimodal.*present|class.*audience|school.*audience|play.*at.*assembly|families.*can|parents.*can|wider.*audience/.test(s))r.push({cat:'Creative Communicator',sub:'Computer Mediated Communication',desc:'Creating and sharing communications through digital platforms for specific audiences'});
-if(/creat.*original|original.*creat|produce|compose|film|animat|illustrat|original.*work|new.*creation|digital.*artefact|digital.*product|student.created|student.produced|student.made/.test(s))r.push({cat:'Creative Communicator',sub:'Original Works',desc:'Creating original digital works or responsibly repurposing digital resources into new creations'});
-if(/garageband|scratch|canva|book creator|imovie|green screen|seesaw|padlet|adobe express|tinkercad|cospaces|delightex|freeform|kahoot|mentimeter|microsoft forms|microsoft excel|google earth|google maps|pico vr|sphero|insta360|lego spike|micro.?bit|codrone|beebot|cubetto|indi robot/.test(tool))r.push({cat:'Creative Communicator',sub:'Learning Tools',desc:'Choosing appropriate platforms and tools to meet the objectives of their creation or communication'});
-if(/team|group.*project|group.*task|work.*in.*groups|work.*in.*teams|group.*present|team.*present|collaborative.*project|class.*project|group.*investigat/.test(s))r.push({cat:'Creative Communicator',sub:'Teamwork',desc:'Contributing constructively to project teams, assuming roles and working toward a common goal'});
+// PRINCIPLED PRACTICE — Technology and Society
+if(/how technology.*(impact|transform|change|evolv|influenc|affect)|impact.*of.*(ict|technolog|digital)|role.*of.*(ict|digital|technolog)|ict.*in.*society|positive.*and.*negative.*impact|how.*ict.*is.*used|technology.*transform|technology.*has.*changed|evolution.*of.*technolog|history.*of.*technolog|technolog.*over.*time|communication.*tool.*evolved|digital.*literacy|future.*of.*technolog/.test(s))
+r.push({cat:'Principled Practice',sub:'Technology and Society',desc:'Understanding the role and impact of digital technology in school, home, community and society'});
 
-// SYSTEMS THINKING
-if(/navigat|operat.*device|use.*device|use.*app|open.*app|troubleshoot|select.*tool|choose.*tool|choose.*platform|which.*tool|select.*platform|device.*settings|adjust.*settings/.test(s))r.push({cat:'Systems Thinking',sub:'Use and Selection',desc:'Selecting and operating appropriate devices and software to complete specific tasks'});
-if(/circuit|input.*output|hardware|software.*component|system.*component|network|sensor.*detect|sensor.*trigger|motor.*trigger|how.*system.*works|system.*breaks|if.*part.*fails|automated.*system|parts.*work.*together/.test(s))r.push({cat:'Systems Thinking',sub:'Systems and Components',desc:'Identifying, comparing and classifying system components and their functions'});
-if(/data.*collect|collect.*data|data.*table|data.*chart|data.*graph|record.*result|log.*data|dataset|spreadsheet|microsoft excel|tally|data.*management|save.*data|store.*data|data.*over.*time|sensor.*data|reading.*over/.test(s))r.push({cat:'Systems Thinking',sub:'Data Management',desc:'Managing and maintaining digital data across storage mediums and formats'});
-if(/algorithm|sequenc.*code|code.*sequenc|debug|decompos|computational.*think|automat|loop|if.*then|conditional|step.by.step.*code|program.*logic|coded.*logic|branching.*logic|flowchart.*code/.test(s))r.push({cat:'Systems Thinking',sub:'Thinking Process',desc:'Using algorithmic and computational thinking to develop and test automated solutions'});
+// ENGINEERING KNOWLEDGE — Ideate and Plan
+if(/design.*process|brainstorm|generate.*idea|ideate|plan.*their|plan.*a.*solution|planning.*their|record.*their.*idea|represent.*their.*thinking|outline.*their|storyboard|sketch.*their|concept.*map|annotate.*plan|design.*brief|map.*out.*idea|map.*their.*thinking|map.*out.*concept/.test(s))
+r.push({cat:'Engineering Knowledge',sub:'Ideate and Plan',desc:isF2?'Preparing simple plans to find solutions or answers to questions':'Generating ideas, representing thinking and planning digital solutions'});
+
+// ENGINEERING KNOWLEDGE — Prototype (tool-based OR specific build/code language)
+if(isRobot||/code[sd]?|program|programm|build.*prototype|build.*robot|build.*sensor|build.*device|build.*mechanism|build.*rig|build\s+a\s+circuit|building\s+a\s+circuit|build\s+their\s+circuit|build.*a.*model|build.*machine|build.*a.*working|build.*an.*interactive|build.*a.*simulation|design.*and.*build|design.*and.*build\b|design.*and.*develop|digital.*solution|creat\w*\s+a\s+digital\b|creat\w*\s+their\s+digital\b|develop.*a.*digital|digital.*artefact|3d model|tinkercad/.test(s))
+r.push({cat:'Engineering Knowledge',sub:'Prototype',desc:isF2?'Participating in the development of a digital solution or creative output':is34?'Creating and modifying digital solutions or creative outputs for particular purposes':'Independently or collaboratively creating and modifying digital solutions for particular audiences and purposes'});
+
+// ENGINEERING KNOWLEDGE — Self-Regulated Learning
+if(/self.assess|reflect.*on.*their.*learn|reflect.*on.*the.*process|personal.*goal|learning.*goal|review.*their.*progress|feedback.*improve|growth.*mindset|learning.*journal|metacognit|monitor.*own.*learn|track.*their.*progress|assess.*their.*own|what.*they.*learned|how.*they.*improved|revisit.*their|evidence.*of.*growth|document.*their.*learning|return.*to.*throughout/.test(s))
+r.push({cat:'Engineering Knowledge',sub:'Self-Regulated Learning',desc:'Setting personal learning goals, seeking feedback and reflecting on the process to improve outcomes'});
+
+// ENGINEERING KNOWLEDGE — Critically Curate (information-seeking, NOT hands-on experiments)
+if(/research|gather.*information|locate.*information|find.*source|evaluat.*source|evaluat.*credib|evaluat.*reliab|evaluat.*accurac|evaluat.*relev|curate.*information|analyse.*data|interpret.*data|formulate.*question|fact.check|verify.*source|bibliography|investigate.*source|investigate.*information|investigate.*online|collect.*evidence|gather.*evidence|primary.*source|secondary.*source|synthesise|synthesize/.test(s))
+r.push({cat:'Engineering Knowledge',sub:'Critically Curate',desc:isF2?'Employing effective research strategies to locate information for creative and intellectual pursuits':'Building knowledge by actively locating, evaluating and synthesising information from digital resources'});
+
+// ENGINEERING KNOWLEDGE — Design Thinking
+if(/design.*thinking|empathis|empathise|empathize|define.*the.*problem|iterate|iterating|test.*and.*refine|user.*need|human.centred|design.*cycle|prototype.*and.*test|test.*their.*prototype|refine.*their.*design|design.*constrain|design.*criteria|d:school|empathy.*interview|testing.*phase|testing.*week|design.*feedback/.test(s))
+r.push({cat:'Engineering Knowledge',sub:'Design Thinking',desc:isF2?'Using a deliberate design process to generate ideas and solve authentic problems':'Using a cyclical design process to develop, test and refine prototypes as solutions to authentic problems'});
+
+// CREATIVE COMMUNICATOR — Collaboration
+if(/collaborat|co.creat|each group|in small groups|in groups|in pairs|their group|group films|small group|with a partner|partner draws|partner must|peer.*feedback|peer.*review|work.*together|jointly|collective|work.*with.*their.*partner|with a classmate|class.*contribut|class.*collects|class.*builds|class.*curates/.test(s))
+r.push({cat:'Creative Communicator',sub:'Collaboration',desc:isF2?'Using purposefully selected tools to safely share information with appropriate audiences':'Using digital tools to safely share, exchange and co-create with appropriate audiences'});
+
+// CREATIVE COMMUNICATOR — Computer Mediated Communication
+if(/broadcast|news.*report|podcast|publish|post.*online|digital.*exhibition|share.*their.*work|present.*to.*audience|multimodal.*present|class.*audience|school.*audience|assembly|families.*can|parents.*can|wider.*audience|exhibited|viewed.*by|shared.*with.*class|shared.*with.*parents|viewed.*on.*screen|display.*to/.test(s))
+r.push({cat:'Creative Communicator',sub:'Computer Mediated Communication',desc:'Creating and sharing digital communications for specific audiences through appropriate digital platforms'});
+
+// CREATIVE COMMUNICATOR — Original Works
+if(/produce|compose|film|animat|illustrat|create.*original|original.*creation|new.*creation|student.*creat|student.*produc|student.*made|digital.*product|digital.*artefact|their.*own.*work|own.*composition|own.*soundtrack|original.*work/.test(s))
+r.push({cat:'Creative Communicator',sub:'Original Works',desc:'Creating original digital works or responsibly repurposing digital resources into new creations'});
+
+// CREATIVE COMMUNICATOR — Learning Tools (all named tools)
+if(/garageband|scratch|canva|book creator|imovie|green screen|seesaw|padlet|adobe express|tinkercad|cospaces|delightex|freeform|kahoot|mentimeter|microsoft forms|microsoft excel|google earth|google maps|pico vr|sphero|insta360|lego spike|micro.?bit|codrone|beebot|cubetto|indi robot|dji drone/.test(tool))
+r.push({cat:'Creative Communicator',sub:'Learning Tools',desc:isF2?'Engaging with a variety of creation and collaboration tools to express ideas and learning':is34?'Choosing appropriate platforms and tools to meet the objectives of their creation or communication':'Choosing and customising appropriate platforms and tools, including publishing content for intended audiences'});
+
+// CREATIVE COMMUNICATOR — Teamwork
+if(/assuming.*role|team.*roles|assigned.*role|as a team|group.*project|collaborative.*project|team.*present|each.*group.*present|group.*roles|different.*roles|group.*task|work.*in.*teams/.test(s))
+r.push({cat:'Creative Communicator',sub:'Teamwork',desc:'Contributing constructively to project teams, assuming roles and working effectively toward a common goal'});
+
+// SYSTEMS THINKING — Use and Selection
+if(/troubleshoot|select.*from.*range|select.*a.*device|select.*software|select.*platform|independently.*select|independently.*operat|adjust.*software|software.*function|range.*of.*devices|choosing.*the.*right.*tool|which.*platform|which.*tool/.test(s))
+r.push({cat:'Systems Thinking',sub:'Use and Selection',desc:isF2?'Identifying and safely operating systems to complete simple specified tasks':'Selecting and operating appropriate devices and software to complete specific tasks'});
+
+// SYSTEMS THINKING — Systems and Components
+if(/circuit|input.*output|hardware|sensor.*detect|sensor.*trigger|motor.*trigger|if.*part.*fails|parts.*work.*together|components.*work|components.*connect|interdependent.*part|system.*breaks.*down|system.*fails|closed.*circuit|networked.*system|system.*component/.test(s))
+r.push({cat:'Systems Thinking',sub:'Systems and Components',desc:'Identifying and comparing system components and their fundamental functions'});
+
+// SYSTEMS THINKING — Data Management
+if(/data.*collect|collect.*data|data.*table|data.*chart|data.*graph|log.*data|dataset|microsoft excel|data.*over.*time|sensor.*data|readings.*over|reading.*at.*interval|tally.*data|record.*readings|chart.*results|graph.*results|spreadsheet.*formula|formula.*track|track.*results/.test(s))
+r.push({cat:'Systems Thinking',sub:'Data Management',desc:isF2?'Managing and maintaining digital data with guidance':'Managing and maintaining data using a variety of digital tools and systems'});
+
+// SYSTEMS THINKING — Thinking Process (tool-based for robotics/coding OR explicit algorithmic language)
+if(isRobot||/algorithm|debug|debugging|decompos|computational.*think|step.by.step.*code|program.*logic|coded.*logic|branching.*logic|flowchart.*code|sequence.*of.*steps|sequence.*of.*instructions|if.then|conditional|loop|loops/.test(s))
+r.push({cat:'Systems Thinking',sub:'Thinking Process',desc:isF2?'Developing an understanding of algorithmic thinking by sequencing instructions':'Using algorithmic thinking to develop and test automated solutions to problems'});
 
 return r;}
 function tgWDS(el,id){var d=document.getElementById("wd_"+id);var p=document.getElementById("wp_"+id);if(d.classList.contains("open")){d.classList.remove("open");p.classList.remove("open")}else{d.classList.add("open");p.classList.add("open")}}
@@ -757,7 +804,7 @@ window._aid-=Object.keys(atlgrp).length;
 Object.keys(atlgrp).forEach(function(cat){var aid='atl'+window._aid++;h+='<div class="atl-detail" id="ad_'+aid+'"><b>'+cat+' Skills</b><ul style="margin:6px 0 0 16px;padding:0;list-style:disc">';atlgrp[cat].forEach(function(a){h+='<li>'+a.skill+' — '+a.desc+'</li>';});h+='</ul></div>';});
 h+='</div></div></div>';
 if(!window._wid)window._wid=0;
-var wdss=gWDS(s.t,s.d);
+var wdss=gWDS(s.t,s.d,yl);
 var wdscols={'Principled Practice':'#9333EA','Engineering Knowledge':'#F5A623','Creative Communicator':'#38BDF8','Systems Thinking':'#22C55E'};
 var wdsgrp={};wdss.forEach(function(w){if(!wdsgrp[w.cat])wdsgrp[w.cat]=[];wdsgrp[w.cat].push(w);});
 var wid2='w'+window._sid++;
