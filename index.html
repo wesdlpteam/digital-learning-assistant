@@ -893,7 +893,7 @@ setTimeout(function(){container.remove();},4000);
 var _lbLastFetch=0;
 function loadLeaderboard(){
 var now=Date.now();
-if(now-_lbLastFetch<3000)return;
+if(now-_lbLastFetch<300000)return; // 5-minute cache — was 3 seconds
 _lbLastFetch=now;
 fetch(FBHOOK+'?action=leaderboard').then(function(r){return r.json();}).then(function(data){
 window._leaderboard=data;
@@ -919,14 +919,82 @@ h+='</div>';
 });
 return h;
 }
+// Pick up redirects from 404.html (GitHub Pages SPA routing)
+try{(function(){
+  var redirect=sessionStorage.getItem('dla_redirect');
+  if(redirect){
+    sessionStorage.removeItem('dla_redirect');
+    try{history.replaceState(null,'',redirect);}catch(e){}
+  }
+})();}catch(e){}
 loadLeaderboard();
 readHash();
 R();
 
 
 
-function pushHash(){try{var h="";if(S.v==="campus"&&S.ca)h="#"+encodeURIComponent(S.ca);else if(S.v==="units"&&S.ca&&S.yl)h="#"+encodeURIComponent(S.ca)+"/"+encodeURIComponent(S.yl);else if(S.v==="detail"&&S.ca&&S.yl&&S.ui!=null)h="#"+encodeURIComponent(S.ca)+"/"+encodeURIComponent(S.yl)+"/"+S.ui;history.replaceState(null,"",h||window.location.pathname);}catch(e){}}
-function readHash(){var h=decodeURIComponent(window.location.hash.replace(/^#/,""));if(!h)return;var parts=h.split("/");if(parts[0]){S.ca=parts[0];S.v="campus";}if(parts[1]){S.yl=parts[1];S.v="units";}if(parts[2]!=null&&parts[2]!==""){var idx=parseInt(parts[2],10);var us=gu(S.ca,S.yl);if(!isNaN(idx)&&us[idx]){S.ui=idx;S.v="detail";}}}
+// ── Clean URL routing (path-based, no hash, no %20) ──────────
+// Year slugs: "Year 1" <-> "Year1", "Prep" stays "Prep"
+function slugYL(y){return y.replace(/\s+/g,'');}
+function unslugYL(y){return y.replace(/(Year|Term)(\d)/,'$1 $2');}
+
+// Detect the base path once (e.g. "/digital-learning-assistant")
+var _basePath=(function(){
+  try{
+    var p=window.location.pathname;
+    var m=p.match(/^(.*?)\/(GW|EL|SKR)(\/|$)/);
+    if(m)return m[1];
+    return p.replace(/\/(index\.html)?$/, '').replace(/\/$/,'') || '';
+  }catch(e){return '';}
+})();
+
+function pushHash(){
+  try{
+    var path=_basePath+'/';
+    if(S.v==='campus'&&S.ca)path+=S.ca;
+    else if(S.v==='units'&&S.ca&&S.yl)path+=S.ca+'/'+slugYL(S.yl);
+    else if(S.v==='detail'&&S.ca&&S.yl&&S.ui!=null)path+=S.ca+'/'+slugYL(S.yl)+'/'+S.ui;
+    else path=_basePath||'/';
+    history.replaceState(null,'',path);
+  }catch(e){}
+}
+
+function readHash(){try{
+  var hash=window.location.hash.replace(/^#/,'');
+  var raw='';
+
+  // Only use path-based routing on GitHub Pages — not in Claude preview or local file
+  var onGitHubPages=/github\.io/.test(window.location.hostname);
+  if(onGitHubPages){
+    var pathname=window.location.pathname;
+    var seg=(pathname.startsWith(_basePath)
+      ? pathname.slice(_basePath.length)
+      : pathname).replace(/^\//, '');
+    raw=seg||decodeURIComponent(hash);
+  } else {
+    // Claude preview / local file — only trust the hash
+    raw=decodeURIComponent(hash);
+  }
+
+  if(!raw)return;
+  var parts=raw.split('/');
+  var ca=parts[0]||'';
+  var ylSlug=parts[1]||'';
+  var uiStr=parts[2]||'';
+
+  // Validate ca is a known campus code before applying
+  if(!ca||!['GW','EL','SKR'].includes(ca))return;
+  S.ca=ca; S.v='campus';
+  if(ylSlug){
+    var yl=unslugYL(ylSlug);
+    S.yl=yl; S.v='units';
+    if(uiStr!==''&&uiStr!=null){
+      var idx=parseInt(uiStr,10);
+      var us=gu(ca,yl);
+      if(!isNaN(idx)&&us[idx]){S.ui=idx;S.v='detail';}
+    }
+  }
+  }catch(e){}}
 function nv(t,v){
 if(t==="ca")trackPage(CN[v]+" campus",CN[v],"");
 else if(t==="yl")trackPage(v,CN[S.ca]||"",v);
@@ -953,14 +1021,46 @@ function showFBSuccess(){document.getElementById('fbContent').innerHTML='<div cl
 
 var _pageStart=Date.now(),_pageName="Home",_pageCampus="",_pageYear="";
 var _userSession="User-"+new Date().toLocaleDateString('en-AU',{day:'2-digit',month:'short'})+"-"+Math.random().toString(36).substr(2,4).toUpperCase();
+
+// Analytics queue — batches navigation events and flushes every 30s or on tab close
+// This prevents hammering the Apps Script webhook when many teachers are online simultaneously
+var _analyticsQueue=[];
+var _analyticsFlushTimer=null;
+
+function _flushAnalytics(sync){
+if(!_analyticsQueue.length)return;
+var batch={type:'analytics_batch',session:_userSession,events:_analyticsQueue.slice()};
+_analyticsQueue=[];
+var body=JSON.stringify(batch);
+if(sync&&navigator.sendBeacon){
+// sendBeacon is guaranteed to complete even during page unload
+navigator.sendBeacon(FBHOOK,new Blob([body],{type:'text/plain'}));
+}else{
+fetch(FBHOOK,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:body}).catch(function(){});
+}
+}
+
+function _scheduleFlush(){
+if(_analyticsFlushTimer)clearTimeout(_analyticsFlushTimer);
+_analyticsFlushTimer=setTimeout(function(){_flushAnalytics(false);},30000);
+}
+
 function trackPage(name,campus,year){
 var spent=Math.round((Date.now()-_pageStart)/1000);
+// Only queue events where the user actually spent time on the page (2s–10min)
 if(spent>=2&&spent<=600){
-var payload={type:'analytics',session:_userSession,page:_pageName,campus:_pageCampus,year:_pageYear,seconds:spent};
-fetch(FBHOOK,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)});
+_analyticsQueue.push({page:_pageName,campus:_pageCampus,year:_pageYear,seconds:spent});
+_scheduleFlush();
+// Flush immediately if queue is getting large (e.g. very active session)
+if(_analyticsQueue.length>=8)_flushAnalytics(false);
 }
 _pageStart=Date.now();_pageName=name;_pageCampus=campus||"";_pageYear=year||"";}
-window.addEventListener('beforeunload',function(){trackPage('exit','','');});
+
+// Use sendBeacon on unload — reliable, non-blocking, won't trigger another concurrent write
+window.addEventListener('visibilitychange',function(){
+if(document.visibilityState==='hidden'){trackPage('exit','','');_flushAnalytics(true);}
+});
+window.addEventListener('beforeunload',function(){trackPage('exit','','');_flushAnalytics(true);});
 
 function reactFB(idx,reaction,btn){
 var d=window._fbData[idx];
