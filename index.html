@@ -976,7 +976,8 @@ function pushHash(){
       var thSlug=u?TH_SLUG[u.th]||S.ui:S.ui;
       path+=S.ca+'/'+slugYL(S.yl)+'/'+thSlug;
     }
-    else path=_basePath||'/';
+    else path=(_basePath||'')+'/';
+
     history.replaceState(null,'',path);
   }catch(e){}
 }
