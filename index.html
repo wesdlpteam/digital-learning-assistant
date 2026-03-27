@@ -928,7 +928,7 @@ try{(function(){
     var routePath=params.get('p')||'';
     var hash=params.get('h')||'';
     if(routePath){
-      var base=window.location.pathname;
+      var base=window.location.pathname.replace(/\/$/,'');
       try{history.replaceState(null,'',base+routePath+(hash?hash:''));}catch(e){}
     }
   }
